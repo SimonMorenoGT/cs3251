@@ -1,0 +1,4 @@
+/home/smoreno9/Desktop/project1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/smoreno9/Desktop/project1/cmake-build-debug/CMakeFiles/client.dir
+/home/smoreno9/Desktop/project1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/smoreno9/Desktop/project1/cmake-build-debug/CMakeFiles/server.dir
