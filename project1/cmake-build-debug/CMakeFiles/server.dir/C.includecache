@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/smoreno9/Desktop/cs3251/project1/server.c
+stdio.h
+-
+sys/socket.h
+-
+arpa/inet.h
+-
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+time.h
+-
+

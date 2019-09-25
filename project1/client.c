@@ -2,7 +2,7 @@
 *
 * FILE:		client.c
 * AUTHOR:	Simon Moreno
-* PROJECT:	CS 3251 Project 1 - Professor Jun Xu 
+* PROJECT:	CS 3251 Project 1 - Professor Jun Xu
 * DESCRIPTION:	Network Client Code
 * CREDIT:	Adapted from Professor Traynor
 *
@@ -32,21 +32,21 @@ int main(int argc, char *argv[])
     char *accountName;		    /* Account Name  */
     char *servIP;		    /* Server IP address  */
     unsigned short servPort;	    /* Server Port number */
-    
 
-    char sndBuf[SNDBUFSIZE];	    /* Send Buffer */
+
+    int sndBuf[SNDBUFSIZE];	    /* Send Buffer */
     char rcvBuf[RCVBUFSIZE];	    /* Receive Buffer */
-    
+
     int balance;		    /* Account balance */
 
-    char *toAccount;     /* Account to transfer money to */
-    char *moveMoney;          /* Amount of $ to move */
+    char *to_account; //Transfers account
 
     enum operations{BAL, WITHDRAW, TRANSFER};
     enum accountNames{myChecking, mySavings, myCD, my401k, my529};
 
-    enum operations operation;
-    enum accountNames account;
+    int operation;
+    int account1;
+    int account2;
 
     /* Get the Account Name from the command line */
     /* Get the addditional parameters from the command line */
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     else if (argc == 6) {
         operation = WITHDRAW;
         accountName = argv[2];
-        moveMoney = argv[3];
+        //moveMoney = argv[3];
         servIP = argv[4];
         servPort = atoi(argv[5]);
         memset(&sndBuf, 0, SNDBUFSIZE);
@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
     else if (argc == 7) {
         operation = TRANSFER;
         accountName = argv[2];
-        toAccount = argv[3];
-        moveMoney = argv[4];
+        to_account = argv[3];
+        //moveMoney = argv[4];
         servIP = argv[5];
         servPort = atoi(argv[6]);
         memset(&sndBuf, 0, SNDBUFSIZE);
@@ -97,44 +97,103 @@ int main(int argc, char *argv[])
 
     /* Construct the server address structure */
     /*	    FILL IN	 */
-    serv_addr.sin_family = AF_INET;          // host byte order
-    serv_addr.sin_port = htons(servPort);   // short, network byte order
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(servPort);
     serv_addr.sin_addr.s_addr = inet_addr(servIP);
-    memset(&(serv_addr.sin_zero), '\0', 8);
+    //memset(&(serv_addr.sin_zero), '\0', 8);
 
-    /* Establish connecction to the server */
+    /* Establish connection to the server */
     /*	    FILL IN	 */
-    if (connect(clientSock, (struct sockaddr_in *)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
+    if (connect(clientSock, (struct sockaddr *)&serv_addr, sizeof(struct sockaddr_in)) == -1) {
         printf("Connection failed...\n");
         exit(0);
     } else { printf("Connection successfully established..\n"); }
-    
+
     /* Send the string to the server */
     /*	    FILL IN	 */
-    /*
-    snprintf(sndBuf, SNDBUFSIZE, "%s %s", balCount, accountName);
 
-    ssize_t numBytes = send(sock, sndBuf, SNDBUFSIZE, 0);
-    if(numBytes < 0){
-        // DieWithSystemMessage("send() failed");
-        perror("send() failed... TRY AGAIN");
-        close(sock);
-        exit(EXIT_FAILURE);
+    //Create message to send//
+
+    sndBuf[0] = operation;
+
+    if (strcmp(accountName, "myChecking") == 0) {
+        account1 = myChecking;
+        sndBuf[1] = account1;
     }
-    */
-    /* Receive and print response from the server */
-    /*	    FILL IN	 */
+    else if (strcmp(accountName, "mySavings") == 0) {
+        account1 = mySavings;
+        sndBuf[1] = account1;
+    }
+    else if (strcmp(accountName, "myCD") == 0) {
+        account1 = myCD;
+        sndBuf[1] = account1;
+    }
+    else if (strcmp(accountName, "my401k") == 0) {
+        account1 = my401k;
+        sndBuf[1] = account1;
+    }
+    else if (strcmp(accountName, "my529") == 0) {
+        account1 = my529;
+        sndBuf[1] = account1;
+    } else {
+        printf("Invalid account...\n");
+        exit(0);
+    }
 
-    int recvSize = recv(clientSock, rcvBuf, RCVBUFSIZE, 0);
-    if(recvSize == -1){
-        printf("Receiving response failed...\n");
+    if (operation == BAL) {
+        send(clientSock, sndBuf, SNDBUFSIZE, 0);
+    } else if (operation == WITHDRAW) {
+        sndBuf[2] = atoi(argv[3]);
+        send(clientSock, sndBuf, SNDBUFSIZE, 0);
+    } else if (operation == TRANSFER) {
+        if (strcmp(to_account, "myChecking") == 0) {
+            account2 = myChecking;
+            sndBuf[2] = account2;
+        }
+        else if (strcmp(to_account, "mySavings") == 0) {
+            account2 = mySavings;
+            sndBuf[2] = account2;
+        }
+        else if (strcmp(to_account, "myCD") == 0) {
+            account2 = myCD;
+            sndBuf[2] = account2;
+        }
+        else if (strcmp(to_account, "my401k") == 0) {
+            account2 = my401k;
+            sndBuf[2] = account2;
+        }
+        else if (strcmp(to_account, "my529") == 0) {
+            account2 = my529;
+            sndBuf[2] = account2;
+        } else {
+            printf("Invalid account to transfer to...\n");
+            exit(0);
+        }
+        printf("%s", argv[4]);
+        sndBuf[3] = atoi(argv[4]);
+    } else {
+        printf("The message type entered was invalid.\n");
         exit(1);
     }
 
-    printf("%s\n", rcvBuf);
+    send(clientSock, sndBuf, SNDBUFSIZE, 0);
 
-    close(clientSock);
+    /* Receive and print response from the server */
+    /*	    FILL IN	 */
+    if (operation == BAL) {
+        recv(clientSock, &balance, REPLYLEN, 0);
+        close(clientSock);
+        balance = ntohl(balance);
+        printf("Balance is: %i\n", balance);
+    } else if (operation == WITHDRAW) {
+        recv(clientSock, rcvBuf, RCVBUFSIZE, 0);
+        close(clientSock);
+        printf("%s\n", rcvBuf);
+    } else if (operation == TRANSFER){
+        recv(clientSock, rcvBuf, RCVBUFSIZE, 0);
+        close(clientSock);
+        printf("%s\n", rcvBuf);
+    }
 
     return 0;
 }
-

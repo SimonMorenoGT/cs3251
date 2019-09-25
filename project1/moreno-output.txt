@@ -1,0 +1,62 @@
+BAL mySavings
+
+Socket successfully created..
+Connection successfully established..
+Balance is: 1000
+
+//BAL command works the same for all accounts
+
+WITHDRAW mySavings 500
+Socket successfully created..
+Connection successfully established..
+Withdrawal successful! Balance updated.
+
+BAL mySavings
+Socket successfully created..
+Connection successfully established..
+Balance is: 500
+
+WITHDRAW mySavings 700
+Socket successfully created..
+Connection successfully established..
+Insufficient funds.
+
+BAL mySavings
+Socket successfully created..
+Connection successfully established..
+Balance is: 500
+
+//We can see that if you withdraw over your balance it won't let you and the balance holds.
+
+//Too many withdraws
+WITHDRAW mySavings 50
+Socket successfully created..
+Connection successfully established..
+Withdrawal successful! Balance updated.
+
+WITHDRAW mySavings 50
+Socket successfully created..
+Connection successfully established..
+Withdrawal successful! Balance updated.
+
+Socket successfully created..
+Connection successfully established..
+Too many withdraws in a minute. Try again later.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
